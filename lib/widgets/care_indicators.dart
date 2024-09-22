@@ -1,34 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../controllers/plant_controller.dart';
+import '../models/plant_model.dart';
 
 class CareIndicators extends StatelessWidget {
-  final PlantController plantController = Get.find();
+  final Plant plant; // Accept the Plant parameter
+  final Color backgroundColor; // Accept the background color
+
+  CareIndicators(
+      {required this.plant, required this.backgroundColor}); // Constructor
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      double waterLevel = plantController.plant.value.waterLevel;
-      double sunlightLevel = plantController.plant.value.sunlightLevel;
+    // Get current plant's status
+    double waterLevel = plant.waterLevel;
+    double sunlightLevel = plant.sunlightLevel;
+    double fertilizerLevel =
+        plant.fertilizerLevel; // Use growth as fertilizer indicator
 
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Column(
-            children: [
-              Icon(Icons.opacity, size: 50, color: Colors.blue),
-              Text('Water: ${waterLevel.toStringAsFixed(0)}%'),
-            ],
-          ),
-          Column(
-            children: [
-              Icon(Icons.wb_sunny, size: 50, color: Colors.orange),
-              Text('Sunlight: ${sunlightLevel.toStringAsFixed(0)}%'),
-            ],
-          ),
-        ],
-      );
-    });
+    // Determine text color based on background color
+    Color textColor = (backgroundColor.computeLuminance() < 0.5)
+        ? Colors.white // Light text for dark backgrounds
+        : Colors.black; // Dark text for light backgrounds
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _buildIndicator(
+            Icons.opacity, "Water", waterLevel, Colors.blue, textColor),
+        _buildIndicator(Icons.wb_sunny, "Sunlight", sunlightLevel,
+            Colors.yellow, textColor),
+        _buildIndicator(
+            Icons.eco, "Fertilizer", fertilizerLevel, Colors.green, textColor),
+      ],
+    );
+  }
+
+  // Helper function to create the individual indicators
+  Widget _buildIndicator(
+      IconData icon, String label, double level, Color color, Color textColor) {
+    return Column(
+      children: [
+        Icon(icon, size: 50, color: color),
+        Text('$label: ${level.toStringAsFixed(0)}%',
+            style: TextStyle(fontSize: 16, color: textColor)),
+      ],
+    );
   }
 }
