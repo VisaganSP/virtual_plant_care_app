@@ -182,6 +182,10 @@ Below are some screenshots of the app in action:
 
 ![Plant Customization](images/app_image6.jpeg)
 
+Firebase Firestore Database:
+
+![Firebase Firestore Database](images/firebase.png)
+
 ### Video Demo
 
 Check out a video demonstration of the app in action:
